@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "cb9b996f-6ffc-41a6-a870-702a7ef55500",
+		"name": "Users",
+		"description": "users' test from https://circleci.com/blog/testing-an-api-with-postman/?utm_medium=SEM&utm_source=gnb&utm_campaign=SEM-gnb-DSA-Eng-ni&utm_content=&utm_term=dynamicSearch-&gclid=CjwKCAiAxp-ABhALEiwAXm6IyYJ39KRc7nU-so_fMrqZCWAplvmacxxf4s7hUqvky7MoU3SYINguKhoC0icQAvD_BwE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test_Collections",
+			"item": [
+				{
+					"name": "Get_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"get users\", function(){\r",
+									"    responseJson = Json.parse(responseBody);\r",
+									"    pm.expect(responseJson.records.length).to.above(0)\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Request is successful with a status code of 200\", function () {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check that it returns an array\", function () {\r",
+									"  var jsonData = pm.response.json();\r",
+									"  pm.expect(jsonData).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									")"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "apikey"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{api_url}}/user/get",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"user",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create_User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User creation was successful\", function () {\r",
+									"  pm.expect(pm.response.code).to.be.oneOf([200, 201, 202]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Confirm response message\", function () {\r",
+									"  var jsonData = pm.response.json();\r",
+									"  pm.expect(jsonData.message).to.eql(\"User Successfully created\");\r",
+									"  pm.expect(jsonData.message).to.include(\"created\")\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let random = +new Date();\r",
+									"\r",
+									"pm.globals.set(\"username\", `${random}-user`);\r",
+									"pm.globals.set(\"email\", `${random}-user@test.com`);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"username\": \"UserAbc\",\r\n \"email\": \"newEmail@gmail.com\",\r\n \"password\" : \"L4402\",\r\n \"id\": 3,\r\n \"created_dt\": \"2020-03-09 10:11:12\"\r\n}"
+						},
+						"url": {
+							"raw": "{{api_url}}/user/create?username={{username}}&email={{email}}&password=12345",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"user",
+								"create"
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "{{username}}"
+								},
+								{
+									"key": "email",
+									"value": "{{email}}"
+								},
+								{
+									"key": "password",
+									"value": "12345"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
